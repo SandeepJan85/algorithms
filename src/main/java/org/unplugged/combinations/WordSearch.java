@@ -56,16 +56,16 @@ public class WordSearch {
         boolean exist = false;
         if (j + 1 < letters[i].length &&
                 shouldTraverse(i, j + 1, letters, word, tracker)) {
-            exist = exist(letters, word.substring(1), i, j + 1, tracker);
+            exist = exist || exist(letters, word.substring(1), i, j + 1, tracker);
         }
         if (j - 1 >= 0 && shouldTraverse(i, j - 1, letters, word, tracker)) {
-            exist = exist(letters, word.substring(1), i, j - 1, tracker);
+            exist = exist || exist(letters, word.substring(1), i, j - 1, tracker);
         }
         if (i - 1 >= 0 && shouldTraverse(i - 1, j, letters, word, tracker)) {
-            exist = exist(letters, word.substring(1), i - 1, j, tracker);
+            exist = exist || exist(letters, word.substring(1), i - 1, j, tracker);
         }
         if (i + 1 < letters.length && shouldTraverse(i + 1, j, letters, word, tracker)) {
-            exist = exist(letters, word.substring(1), i + 1, j, tracker);
+            exist = exist || exist(letters, word.substring(1), i + 1, j, tracker);
         }
         return exist;
     }
