@@ -2,32 +2,57 @@ package org.unplugged.graph;
 
 public class SnakesAndLadders {
 
-    int[][] board = {{-1,-1,-1,-1,-1,-1},
-                     {-1,-1,-1,-1,-1,-1},
-                     {-1,-1,-1,-1,-1,-1},
-                     {-1,35,-1,-1,13,-1},
-                     {-1,-1,-1,-1,-1,-1},
-                     {-1,15,-1,-1,-1,-1}};
-
     public static void main(String[] a) {
-        System.out.println(getCellCoordinatesByCellNumber(7, 6, 6));
+        System.out.println(getCellCoordinatesByCellNumber(9, 6, 6));
+        int[][] board = {{-1,-1,-1,-1,-1,-1},
+                {-1,-1,-1,-1,-1,-1},
+                {-1,-1,-1,-1,-1,-1},
+                {-1,35,-1,-1,13,-1},
+                {-1,-1,-1,-1,-1,-1},
+                {-1,15,-1,-1,-1,-1}};
+        SnakesAndLadders game = new SnakesAndLadders();
+        game.findLeastDiceRolls(board.length - 1, board[0].length - 1, board);
     }
 
-    public void findLeastDiceRolls(int i, int j, Queue queue, int diceRoll, int numDiceRolls) {
-        if (i % 2 != 0) {
+    public void findLeastDiceRolls(int i, int j, int[][] board) {
+        Queue queue = new Queue();
+        putItemsInQueue(i, j, board, queue, null);
+        System.out.println(queue.length);
+    }
 
-        } else {
-
+    public void putItemsInQueue(int i, int j, int[][] board, Queue queue, Node startNode) {
+        int count = 0;
+        while (count < 6) {
+            if (i % 2 != 0) {
+                if (j + 1 < board[i].length) {
+                    j = j + 1;
+                } else {
+                    i = i - 1;
+                }
+            } else {
+                if (j - 1 >= 0) {
+                    j = j - 1;
+                } else {
+                    i = i - 1;
+                }
+            }
+            if (i < 0) break;
+            Node node = queue.push(i, j, startNode.getStepCount());
+            node.incrementStepCount();
+            count++;
         }
     }
 
-    public static Node getCellCoordinatesByCellNumber(int number, int rowLen, int colLen) {
-        int row = rowLen - (int) Math.floor(number / colLen) - 1;
-        int mod = number % colLen;
+    public static Node getCellCoordinatesByCellNumber(int number, int rowlen, int collen) {
+        int row = rowlen - (int) Math.ceil((double) number / collen);
+        int col;
+        int mod = number % collen;
         if (row % 2 != 0) {
-            return new Node(row, mod == 0 ? colLen - 1 : mod - 1);
+            col = mod == 0 ? collen - 1 : mod - 1;
+        } else {
+            col = mod != 0 ? collen - mod : 0;
         }
-        return new Node(row, colLen - mod - 1);
+        return new Node(row, col);
     }
 
     static class Queue {
@@ -35,8 +60,8 @@ public class SnakesAndLadders {
         private Node tail;
         private int length;
 
-        public void push(int i, int j) {
-            Node node = new Node(i, j);
+        public Node push(int i, int j, int count) {
+            Node node = new Node(i, j, count);
             if (this.head == null) {
                 this.head = node;
             } else {
@@ -44,6 +69,7 @@ public class SnakesAndLadders {
             }
             this.tail = node;
             this.length++;
+            return node;
         }
 
         public Node pop() {
@@ -62,10 +88,16 @@ public class SnakesAndLadders {
         private final int row;
         private final int column;
         private Node next;
+        private int stepCount;
 
         public Node(int row, int column) {
             this.row = row;
             this.column = column;
+        }
+
+        public Node(int row, int column, int stepCount) {
+            this(row, column);
+            this.stepCount = stepCount;
         }
 
         public int getRow() {
@@ -84,11 +116,20 @@ public class SnakesAndLadders {
             return this.next;
         }
 
+        public void incrementStepCount() {
+            this.stepCount++;
+        }
+
+        public int getStepCount() {
+            return this.stepCount;
+        }
+
         @Override
         public String toString() {
             return "Node{" +
                     "row=" + row +
                     ", column=" + column +
+                    ", next=" + next +
                     '}';
         }
     }
