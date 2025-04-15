@@ -2,10 +2,16 @@ package org.unplugged.stack;
 
 public class ValidParentheses {
     public static void main(String[] args) {
-        String str = "{{}(}()";
+        String str = "{([])}";
         System.out.println(validParentheses(str));
     }
 
+    /**
+     * A function that checks if a given pair of parentheses is valid
+     *
+     * @param str - the string that needs to be validates
+     * @return a boolean
+     */
     public static boolean validParentheses(String str) {
         char[] parentheses = str.toCharArray();
         Stack stack = new Stack();
