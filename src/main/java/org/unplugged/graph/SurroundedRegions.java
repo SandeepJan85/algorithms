@@ -2,14 +2,13 @@ package org.unplugged.graph;
 
 import java.util.Arrays;
 
+/**
+ * What we are doing is traversing through the border and run a DFS for every cell that is a region
+ * and mark it with a 'Z' and then traverse through all the cells again to mark the remaining O's to 'X'
+ * and the Z's to O
+ */
 public class SurroundedRegions {
 
-    /**
-     * What we are doing is traversing through the border and run a DFS for every cell that is a region
-     * and mark it with a 'Z' and then traverse through all the cells again to mark the remaining O's to 'X'
-     * and the Z's to O
-     * @param args
-     */
     public static void main(String[] args) {
         char[][] board = {{'X','O','X','X','X'},
                           {'X','O','O','X','X'},
