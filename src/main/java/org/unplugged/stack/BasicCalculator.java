@@ -7,7 +7,9 @@ package org.unplugged.stack;
 public class BasicCalculator {
 
     public static void main(String[] args) {
+        //(1+(4+5+2)-3)+(6+8)
         System.out.println(calculate("(1+(4+5+2)-3)+(6+8)"));
+        System.out.println(calculate("-5+1+2-4-3"));
     }
 
     /**
@@ -22,7 +24,7 @@ public class BasicCalculator {
         Stack stack = new Stack();
         for (String part : expParts) {
             if (part.equals(")")) {
-                stack.push(String.valueOf(evaluateExpressionWithinParenthesis(stack)));
+                stack.push(String.valueOf(evaluateExpression(stack)));
             } else {
                 if (!part.equals(" ")) {
                     stack.push(part);
@@ -33,44 +35,25 @@ public class BasicCalculator {
     }
 
     /**
-     * A function that evaluates an expression outside the parentheses
+     * A function that recursively evaluates an expression
      *
-     * @param stack
+     * @param stack - the stack that has the elements
      * @return
      */
     public static int evaluateExpression(Stack stack) {
         Stack.Node node = stack.pop();
-        int total = 0;
-        while (node !=null && !node.getVal().equals("(")) {
-            if (!node.getVal().equals("-") && !node.getVal().equals("+")) {
-                total = Integer.parseInt(node.getVal()) + total;
-            }
-            if (node.getVal().equals("-")) {
-                total = -total;
-            }
-            node = stack.pop();
+        if (node == null || node.getVal().equals("(")) return 0;
+        Stack.Node operatorNode = null;
+        if (!node.getVal().equals("-") && !node.getVal().equals("+")) {
+            operatorNode = stack.pop();
         }
-        return total;
-    }
-
-    /**
-     * A function that evaluates an expression within a parentheses
-     *
-     * @param stack - the stack that has the elements that need to be evaluated
-     * @return - the sum of the expression
-     */
-    public static int evaluateExpressionWithinParenthesis(Stack stack) {
-        Stack.Node node = stack.pop();
-        int total = 0;
-        while (!node.getVal().equals("(")) {
-            if (!node.getVal().equals("-") && !node.getVal().equals("+")) {
-                total = Integer.parseInt(node.getVal()) + total;
-            }
-            if (node.getVal().equals("-")) {
-                total = -total;
-            }
-            node = stack.pop();
+        if (operatorNode == null || operatorNode.getVal().equals("(")) {
+            return Integer.parseInt(node.getVal());
         }
-        return total;
+        if (operatorNode.getVal().equals("+")) {
+            return evaluateExpression(stack) + Integer.parseInt(node.getVal());
+        } else {
+            return evaluateExpression(stack) - Integer.parseInt(node.getVal());
+        }
     }
 }
