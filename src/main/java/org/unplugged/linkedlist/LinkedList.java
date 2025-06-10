@@ -8,7 +8,9 @@ public class LinkedList {
         Node head = new Node(1, new Node(2, new Node(3, new Node(4,
                 new Node(5, new Node(6, new Node(7)))))));
         head = removeMiddle(head);
-        System.out.println(head);
+        Node node = new Node(1, new Node(2, new Node(3, new Node(4))));
+        Node lastOdd = oddEvenList(node);
+        System.out.println(node);
     }
 
     //TODO - This is yet to be solved
@@ -69,6 +71,39 @@ public class LinkedList {
             remove(prev, current, next.getNext());
         } else {
             remove(prev, current, null);
+        }
+    }
+
+    public static Node oddEvenList(Node node) {
+        Node even = node.getNext();
+        if (node.getNext() != null) {
+            Node lastOddNode = arrangeOddAndEven(node, even, even.getNext(), null);
+            lastOddNode.setNext(even);
+        }
+        return node;
+    }
+
+    /**
+     * Function that recursively sets the next nodes separately for even and odd nodes in the list
+     *
+     * @param oddNode - initially the head, but would be the odd node in the list in the subsequent method calls
+     * @param evenNode - is the even node in the list
+     * @param oddNodeNext - is the next node of the odd node
+     * @param evenNodeNext - is the next node of the even node
+     * @return - the last odd node in the list
+     */
+    public static Node arrangeOddAndEven(Node oddNode, Node evenNode, Node oddNodeNext, Node evenNodeNext) {
+        if(oddNodeNext == null && evenNodeNext == null) {
+            oddNode.setNext(null);
+            evenNode.setNext(null);
+            return oddNode;
+        }
+        if (oddNodeNext != null) {
+            oddNode.setNext(oddNodeNext);
+            return arrangeOddAndEven(oddNodeNext, evenNode, null, oddNodeNext.getNext());
+        } else {
+            evenNode.setNext(evenNodeNext);
+            return arrangeOddAndEven(oddNode, evenNodeNext, evenNodeNext.getNext(), null);
         }
     }
 
