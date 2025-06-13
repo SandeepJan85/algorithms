@@ -1,5 +1,8 @@
 package org.unplugged.linkedlist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LinkedList {
 
     public static void main(String[] args) {
@@ -11,6 +14,9 @@ public class LinkedList {
         Node node = new Node(1, new Node(2, new Node(3, new Node(4))));
         Node lastOdd = oddEvenList(node);
         System.out.println(node);
+        Node newNode = new Node(4, new Node(10, new Node(2,
+                new Node(3, new Node(12, new Node(4))))));
+        System.out.println(maxTwinSum(newNode, new ArrayList<Integer>(), 0));
     }
 
     //TODO - This is yet to be solved
@@ -105,6 +111,27 @@ public class LinkedList {
             evenNode.setNext(evenNodeNext);
             return arrangeOddAndEven(oddNode, evenNodeNext, evenNodeNext.getNext(), null);
         }
+    }
+
+    /**
+     * Calculates the max twin sum in a linked list
+     *
+     * @param node - initially the head node and next node in the list for every subsequent call
+     * @param nodeValues - the list that gets populated by the values of the node
+     * @param index - 0 indexed
+     * @return max twin sum where twin of a node i is calculated by n - 1 - i, where n is the total size of
+     * the linked list
+     */
+    public static int maxTwinSum(Node node, List<Integer> nodeValues, int index) {
+        if (node == null) {
+            return 0;
+        }
+        nodeValues.add(node.getVal());
+        int maxVal = maxTwinSum(node.getNext(), nodeValues, index + 1);
+        if (index >= nodeValues.size()/ 2) {
+            maxVal = Math.max(maxVal, node.getVal() + nodeValues.get(nodeValues.size() - 1 - index));
+        }
+        return maxVal;
     }
 
     static class Node {
